@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package>
-    <name>grassfire</name>
+    <name>tca</name>
     <version>0.0.1</version>
     <description>
-        Implementation of the Grassfire algorithm for 3D collision avoidance
+        Topological Collision Avoidance
     </description>
     <maintainer email="wallar@mit.edu">Alex Wallar</maintainer>
     <author email="wallar@mit.edu">Alex Wallar</author>
     <license>GPLv2</license>
-    <url type="website">http://github.com/wallarelvo/grassfire</url>
+    <url type="website">http://github.com/wallarelvo/tca</url>
     <buildtool_depend>catkin</buildtool_depend>
     <build_depend>geometry_msgs</build_depend>
     <build_depend>nav_msgs</build_depend>
