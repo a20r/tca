@@ -4,36 +4,33 @@
 
 #include "types.hpp"
 
-namespace NrlEvg {
+template <class T>
+class Weight {
 
-    template <class T>
-    class Weight {
+    public:
+        Weight() {};
 
-        public:
-            Weight() {};
+        Weight(T val, double weight) {
+            this->val = val;
+            this->weight = weight;
+        }
 
-            Weight(T val, double weight) {
-                this->val = val;
-                this->weight = weight;
-            }
+        T get_val() const {
+            return this->val;
+        }
 
-            T get_val() const {
-                return this->val;
-            }
+        double get_weight() const {
+            return this->weight;
+        }
 
-            double get_weight() const {
-                return this->weight;
-            }
+        bool operator<(const Weight& right) const {
+            return this->weight < right.get_weight();
+        }
 
-            bool operator<(const Weight& right) const {
-                return this->weight < right.get_weight();
-            }
+    private:
+        T val;
+        double weight;
 
-        private:
-            T val;
-            double weight;
-
-    };
-}
+};
 
 #endif

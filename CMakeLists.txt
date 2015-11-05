@@ -25,6 +25,7 @@ include_directories(
     include ${catkin_INCLUDE_DIRS} resources/dynamicvoronoi/src
 )
 
-add_executable(tca_node src/tca.cpp src/pathgraph.cpp src/searchpath.cpp)
+add_executable(tca_node src/tca.cpp src/pathgraph.cpp src/searchpath.cpp
+    src/voronoi.cpp)
 target_link_libraries(tca_node
     ${catkin_LIBRARIES} dynamicvoronoi)
