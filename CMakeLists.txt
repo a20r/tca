@@ -17,11 +17,14 @@ catkin_package(
  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs nav_msgs
 )
 
+add_subdirectory(resources/dynamicvoronoi dynamicvoronoi)
+
 link_directories(/usr/local/lib)
 
 include_directories(
-    include ${catkin_INCLUDE_DIRS}
+    include ${catkin_INCLUDE_DIRS} resources/dynamicvoronoi/src
 )
 
-add_executable(tca_node src/tca.cpp)
-target_link_libraries(tca_node ${catkin_LIBRARIES})
+add_executable(tca_node src/tca.cpp src/pathgraph.cpp src/searchpath.cpp)
+target_link_libraries(tca_node
+    ${catkin_LIBRARIES} dynamicvoronoi)
