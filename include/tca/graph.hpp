@@ -5,6 +5,7 @@
 #include <functional>
 #include <sstream>
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -30,9 +31,8 @@ class IndexHash {
 
 class Edge {
 
-    Index a, b;
-
     public:
+        Index a, b;
         Edge() {}
         ~Edge() {}
         Edge(Index a, Index b) : a(a), b(b) {}
@@ -49,22 +49,36 @@ class EdgeHash {
         }
 };
 
+typedef vector<Index> IndexPath;
+
 class EdgeData {
 
     public:
-        double distance;
+        double dist;
+        vector<IndexPath> paths;
 
         EdgeData() {};
         ~EdgeData() {};
-        EdgeData(double distance) : distance(distance) {}
+        EdgeData(vector<IndexPath> paths, double dist) : paths(paths),
+            dist(dist) {}
 };
 
 class Graph {
 
     private:
-        unordered_map<Index, vector<Index>, IndexHash> nodes;
+        unordered_map<Index, unordered_set<Index, IndexHash>, IndexHash> nodes;
         unordered_map<Edge, EdgeData, EdgeHash> edges;
 
+    public:
+        void add_edge(Index i, Index j) {
+            if (nodes.count(i) > 0) {
+                nodes[i].insert(j);
+                nodes[j].insert(i);
+            } else {
+                nodes[i] = unordered_set<Index, IndexHash>();
+                nodes[j] = unordered_set<Index, IndexHash>();
+            }
+        }
 };
 
 #endif
