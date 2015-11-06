@@ -84,7 +84,7 @@ void SearchPath::set_component_weight(Node n0, Node n1, double weight) {
     this->component_weights[n0][n1] = weight;
 }
 
-SearchPath SearchPath::append(SearchPath& rhs, Path path, double wht) {
+SearchPath SearchPath::append(SearchPath &rhs, Path path, double wht) {
     // 'path' is the list of points that link the last element
     // of 'this' and the first element of 'rhs'
 
