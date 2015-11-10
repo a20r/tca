@@ -16,6 +16,7 @@ class Index {
 
         Index() {}
         ~Index() {}
+
         Index(int i, int j) : i(i), j(j) {}
 };
 
@@ -54,14 +55,22 @@ typedef vector<Index> IndexPath;
 class EdgeData {
 
     public:
-        double dist;
         vector<IndexPath> paths;
+        vector<double> dists;
 
         EdgeData() {};
         ~EdgeData() {};
-        EdgeData(vector<IndexPath> paths, double dist) : paths(paths),
-            dist(dist) {}
+        EdgeData(vector<IndexPath> paths, vector<double> dists) : paths(paths),
+            dists(dists) {}
 };
+
+inline bool operator== (Index const& lhs, Index const& rhs) {
+    return (lhs.i == rhs.i) && (lhs.j == rhs.j);
+}
+
+inline bool operator== (Edge const& lhs, Edge const& rhs) {
+    return (lhs.a == rhs.a) && (lhs.b == rhs.b);
+}
 
 class Graph {
 
@@ -70,13 +79,26 @@ class Graph {
         unordered_map<Edge, EdgeData, EdgeHash> edges;
 
     public:
-        void add_edge(Index i, Index j) {
-            if (nodes.count(i) > 0) {
-                nodes[i].insert(j);
-                nodes[j].insert(i);
+        void add_edge(Index a, Index b) {
+            if (nodes.count(a) == 0) {
+                nodes[a] = unordered_set<Index, IndexHash>();
+                nodes[b] = unordered_set<Index, IndexHash>();
+            }
+
+            nodes[a].insert(b);
+            nodes[b].insert(a);
+        }
+
+        void add_edge(Edge edge) {
+            this->add_edge(edge.a, edge.b);
+        }
+
+        EdgeData *get_edge(Index a, Index b) {
+            Edge e(a, b);
+            if (edges.count(e) > 0) {
+                return &this->edges[e];
             } else {
-                nodes[i] = unordered_set<Index, IndexHash>();
-                nodes[j] = unordered_set<Index, IndexHash>();
+                return NULL;
             }
         }
 };
