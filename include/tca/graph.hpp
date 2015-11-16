@@ -62,6 +62,11 @@ class EdgeData {
         ~EdgeData() {};
         EdgeData(vector<IndexPath> paths, vector<double> dists) : paths(paths),
             dists(dists) {}
+
+        void add_path(vector<Index> path, double dist) {
+            this->paths.push_back(path);
+            this->dists.push_back(dist);
+        }
 };
 
 inline bool operator== (Index const& lhs, Index const& rhs) {
@@ -79,7 +84,11 @@ class Graph {
         unordered_map<Edge, EdgeData, EdgeHash> edges;
 
     public:
-        void add_edge(Index a, Index b) {
+
+        Graph() {}
+        ~Graph() {}
+
+        void add_edge(Index a, Index b, EdgeData ed) {
             if (nodes.count(a) == 0) {
                 nodes[a] = unordered_set<Index, IndexHash>();
                 nodes[b] = unordered_set<Index, IndexHash>();
@@ -87,19 +96,24 @@ class Graph {
 
             nodes[a].insert(b);
             nodes[b].insert(a);
+            edges[Edge(a, b)] = ed;
+            edges[Edge(b, a)] = ed;
         }
 
-        void add_edge(Edge edge) {
-            this->add_edge(edge.a, edge.b);
+        void add_edge(Edge edge, EdgeData ed) {
+            this->add_edge(edge.a, edge.b, ed);
         }
 
-        EdgeData *get_edge(Index a, Index b) {
-            Edge e(a, b);
-            if (edges.count(e) > 0) {
-                return &this->edges[e];
+        EdgeData *get_edge(Edge edge) {
+            if (edges.count(edge) > 0) {
+                return &edges[edge];
             } else {
                 return NULL;
             }
+        }
+
+        EdgeData *get_edge(Index a, Index b) {
+            return this->get_edge(Edge(a, b));
         }
 };
 
