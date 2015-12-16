@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
         voronoi.updateAlternativePrunedDiagram();
     }
 
+    voronoi.visualize("/home/wallarelvo/Projects/catkin_ws/src/tca/sandbox/initial.ppm");
     Graph G;
     generate_graph(voronoi, G);
     cout << G.json() << endl;
