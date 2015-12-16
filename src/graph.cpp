@@ -39,18 +39,29 @@ void EdgeData::add_path(vector<Index> path, double dist)
     this->dists.push_back(dist);
 }
 
+void Graph::add_edge(Index a, Index b, vector<Index> path, double dist)
+{
+    if (edges.count(Edge(a, b)) == 0)
+    {
+        EdgeData ed;
+        ed.add_path(path, dist);
+        add_edge(a, b, ed);
+    }
+    else
+    {
+        get_edge(a, b)->add_path(path, dist);
+    }
+}
+
 void Graph::add_edge(Index a, Index b, EdgeData ed)
 {
     if (nodes.count(a) == 0)
     {
         nodes[a] = unordered_set<Index, IndexHash>();
-        nodes[b] = unordered_set<Index, IndexHash>();
     }
 
     nodes[a].insert(b);
-    nodes[b].insert(a);
     edges[Edge(a, b)] = ed;
-    edges[Edge(b, a)] = ed;
 }
 
 void Graph::add_edge(Edge edge, EdgeData ed)

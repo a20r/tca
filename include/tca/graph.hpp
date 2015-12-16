@@ -76,6 +76,7 @@ class Graph {
         Graph() {}
         ~Graph() {}
 
+        void add_edge(Index a, Index b, vector<Index> path, double dist);
         void add_edge(Index a, Index b, EdgeData ed);
         void add_edge(Edge edge, EdgeData ed);
         EdgeData *get_edge(Edge edge);
