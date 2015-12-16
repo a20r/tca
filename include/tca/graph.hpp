@@ -81,6 +81,8 @@ class Graph {
         void add_edge(Edge edge, EdgeData ed);
         EdgeData *get_edge(Edge edge);
         EdgeData *get_edge(Index a, Index b);
+        string json();
+        void write_to_file(string filename);
 };
 
 #endif

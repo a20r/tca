@@ -6,10 +6,10 @@
 
 using namespace std;
 
-void determine_nodes(DynamicVoronoi *dv, vector<Index>& nodes,
+void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
         unordered_set<Index, IndexHash>& node_set);
-bool neighbourhood(Index ind, DynamicVoronoi *dv, bool nbrs[4]);
+bool neighbourhood(Index ind, DynamicVoronoi& dv, bool nbrs[4]);
 Index index_lookup(Index a, int i);
-void generate_graph(DynamicVoronoi *dv, Graph& g);
+void generate_graph(DynamicVoronoi& dv, Graph& g);
 
 #endif

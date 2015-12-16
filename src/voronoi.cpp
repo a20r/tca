@@ -10,18 +10,18 @@ using namespace std;
 
 #define NUM_NBRS 4
 
-void determine_nodes(DynamicVoronoi *dv, vector<Index>& nodes,
+void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
         unordered_set<Index, IndexHash>& node_set)
 {
     int nn;
     bool is_alt;
-    for (int i = 0; i < dv->getSizeX(); i++)
+    for (int i = 0; i < dv.getSizeX(); i++)
     {
-        for (int j = 0; j < dv->getSizeY(); j++)
+        for (int j = 0; j < dv.getSizeY(); j++)
         {
-            nn = dv->getNumVoronoiNeighborsAlternative(i, j);
-            is_alt = dv->isVoronoiAlternative(i, j);
-            if (is_alt || nn >= 3)
+            nn = dv.getNumVoronoiNeighborsAlternative(i, j);
+            is_alt = dv.isVoronoiAlternative(i, j);
+            if (is_alt && nn >= 3)
             {
                 nodes.push_back(Index(i, j));
                 node_set.insert(Index(i, j));
@@ -30,7 +30,7 @@ void determine_nodes(DynamicVoronoi *dv, vector<Index>& nodes,
     }
 }
 
-bool neighbourhood(Index ind, DynamicVoronoi *dv, bool nbrs[4])
+bool neighbourhood(Index ind, DynamicVoronoi& dv, bool nbrs[4])
 {
     int i = ind.i;
     int j = ind.j;
@@ -40,24 +40,24 @@ bool neighbourhood(Index ind, DynamicVoronoi *dv, bool nbrs[4])
         nbrs[k] = false;
     }
 
-    if (dv->isVoronoiAlternative(i, j))
+    if (dv.isVoronoiAlternative(i, j))
     {
 
-        if (j > 0 and dv->isVoronoiAlternative(i, j - 1)) {
+        if (j > 0 and dv.isVoronoiAlternative(i, j - 1)) {
             nbrs[0] = true;
         }
 
-        if (i < dv->getSizeX() - 1 and dv->isVoronoiAlternative(i + 1, j))
+        if (i < dv.getSizeX() - 1 and dv.isVoronoiAlternative(i + 1, j))
         {
             nbrs[1] = true;
         }
 
-        if (j < dv->getSizeY() - 1 and dv->isVoronoiAlternative(i, j + 1))
+        if (j < dv.getSizeY() - 1 and dv.isVoronoiAlternative(i, j + 1))
         {
             nbrs[2] = true;
         }
 
-        if (i > 0 and dv->isVoronoiAlternative(i - 1, j))
+        if (i > 0 and dv.isVoronoiAlternative(i - 1, j))
         {
             nbrs[3] = true;
         }
@@ -84,7 +84,7 @@ inline Index index_lookup(Index a, int i)
     }
 }
 
-Index next_in_path(Index cur, Index prev, DynamicVoronoi *dv)
+Index next_in_path(Index cur, Index prev, DynamicVoronoi& dv)
 {
     bool nbrs[NUM_NBRS];
     neighbourhood(cur, dv, nbrs);
@@ -101,7 +101,7 @@ Index next_in_path(Index cur, Index prev, DynamicVoronoi *dv)
     }
 }
 
-void generate_graph(DynamicVoronoi *dv, Graph& G)
+void generate_graph(DynamicVoronoi& dv, Graph& G)
 {
     bool nbrs[NUM_NBRS];
     vector<Index> nodes;
@@ -129,8 +129,9 @@ void generate_graph(DynamicVoronoi *dv, Graph& G)
                         break;
                     }
                     path.push_back(cur);
+                    Index nxt = next_in_path(cur, prev, dv);
                     prev = cur;
-                    cur = next_in_path(cur, prev, dv);
+                    cur = nxt;
                 }
             }
         }
