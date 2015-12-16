@@ -172,4 +172,4 @@ target/
 # Debug files
 *.dSYM/
 
-
+.ropeproject
