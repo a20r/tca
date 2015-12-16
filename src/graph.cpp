@@ -2,6 +2,7 @@
 #include <functional>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
 #include <unordered_set>
 #include "tca/graph.hpp"
@@ -152,8 +153,8 @@ string Graph::json() {
 }
 
 void Graph::write_to_file(string filename) {
-    // ofstream out_file;
-    // out_file.open(filename);
-    // out_file << this->json();
-    // out_file.close();
+    ofstream out_file;
+    out_file.open(filename);
+    out_file << this->json();
+    out_file.close();
 }

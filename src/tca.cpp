@@ -3,6 +3,7 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <iostream>
 #include <fstream>
+#include <time.h>
 #include "tca/graph.hpp"
 #include "tca/voronoi.hpp"
 
@@ -77,8 +78,9 @@ int main(int argc, char *argv[])
     ros::NodeHandle n;
 
     bool doPruneAlternative = true;
+    string pre = "/home/wallarelvo/Projects/catkin_ws/src/tca/";
 
-    ifstream is("/home/wallarelvo/Projects/catkin_ws/src/tca/resources/dynamicvoronoi/strongly_connected.pgm");
+    ifstream is(pre + "/resources/dynamicvoronoi/strongly_connected.pgm");
     if (!is) {
         std::cerr << "Could not open map file for reading.\n";
         exit(-1);
@@ -88,7 +90,6 @@ int main(int argc, char *argv[])
     int sizeX, sizeY;
     loadPGM( is, &sizeX, &sizeY, &map );
     is.close();
-    // fprintf(stderr, "Map loaded (%dx%d).\n", sizeX, sizeY);
 
     DynamicVoronoi voronoi;
     voronoi.initializeMap(sizeX, sizeY, map);
@@ -98,8 +99,12 @@ int main(int argc, char *argv[])
         voronoi.updateAlternativePrunedDiagram();
     }
 
-    voronoi.visualize("/home/wallarelvo/Projects/catkin_ws/src/tca/sandbox/initial.ppm");
     Graph G;
+    clock_t t1, t2;
+    t1 = clock();
     generate_graph(voronoi, G);
-    cout << G.json() << endl;
+    t2 = clock();
+    float diff = (float) t2 - (float) t1;
+    cout << "Time: " << diff / CLOCKS_PER_SEC << endl;
+    G.write_to_file(pre + "/sandbox/graph.json");
 }
