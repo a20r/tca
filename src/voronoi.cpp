@@ -123,9 +123,7 @@ void generate_graph(DynamicVoronoi& dv, Graph& G)
                 {
                     if (node_set.count(cur) > 0)
                     {
-                        EdgeData ed;
-                        ed.add_path(path, path.size());
-                        G.add_edge(nodes[i], cur, ed);
+                        G.add_edge(nodes[i], cur, path, path.size());
                         break;
                     }
                     path.push_back(cur);

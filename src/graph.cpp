@@ -102,9 +102,10 @@ string json_index_paths(Index ind, EdgeData *ed)
     stringstream buffer;
     buffer << "{\"i\": " << ind.i << ",";
     buffer << "\"j\": " << ind.j << ",";
-    buffer << "\"paths\": [[";
+    buffer << "\"paths\": [";
     for (int i = 0; i < ed->paths.size(); i++)
     {
+        buffer << "[";
         for (int j = 0; j < ed->paths[i].size(); j++)
         {
             buffer << json_index(ed->paths[i][j]);
