@@ -9,12 +9,14 @@
 using namespace std;
 
 #define NUM_NBRS 4
+#define NUM_THREADS 2
 
 void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
         unordered_set<Index, IndexHash>& node_set)
 {
     int nn;
     bool is_alt;
+
     for (int i = 0; i < dv.getSizeX(); i++)
     {
         for (int j = 0; j < dv.getSizeY(); j++)
@@ -108,10 +110,12 @@ void generate_graph(DynamicVoronoi& dv, Graph& G)
     unordered_set<Index, IndexHash> node_set;
     determine_nodes(dv, nodes, node_set);
 
+    #pragma omp parallel for num_threads(NUM_THREADS) private(nodes, node_set)
     for (int i = 0; i < nodes.size(); i++)
     {
         unordered_set<Index, IndexHash> seen;
         neighbourhood(nodes[i], dv, nbrs);
+
         for (int j = 0; j < NUM_NBRS; j++)
         {
             if (nbrs[j])
