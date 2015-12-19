@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_set>
 #include <iostream>
+#include <omp.h>
 #include "dynamicvoronoi.h"
 #include "tca/graph.hpp"
 #include "tca/voronoi.hpp"
@@ -103,14 +104,17 @@ Index next_in_path(Index cur, Index prev, DynamicVoronoi& dv)
     }
 }
 
-void generate_graph(DynamicVoronoi& dv, Graph& G)
+void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
 {
+    dv.occupyCell(start.i, start.j);
+    dv.occupyCell(goal.i, goal.j);
+    dv.update();
+    dv.updateAlternativePrunedDiagram();
     bool nbrs[NUM_NBRS];
     vector<Index> nodes;
     unordered_set<Index, IndexHash> node_set;
     determine_nodes(dv, nodes, node_set);
 
-    #pragma omp parallel for num_threads(NUM_THREADS) private(nodes, node_set)
     for (int i = 0; i < nodes.size(); i++)
     {
         unordered_set<Index, IndexHash> seen;

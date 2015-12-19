@@ -10,8 +10,8 @@
 
 using namespace std;
 
-class Index {
-
+class Index
+{
     public:
         unsigned int i, j;
 
@@ -27,14 +27,14 @@ inline bool operator== (Index const& lhs, Index const& rhs)
     return (lhs.i == rhs.i) && (lhs.j == rhs.j);
 }
 
-class IndexHash {
-
+class IndexHash
+{
     public:
         size_t operator() (const Index& index) const;
 };
 
-class Edge {
-
+class Edge
+{
     public:
         Index a, b;
         Edge() {};
@@ -47,14 +47,14 @@ inline bool operator== (Edge const& lhs, Edge const& rhs)
     return (lhs.a == rhs.a) && (lhs.b == rhs.b);
 }
 
-class EdgeHash {
-
+class EdgeHash
+{
     public:
         size_t operator() (const Edge& edge) const;
 };
 
-class EdgeData {
-
+class EdgeData
+{
     public:
         vector<IndexPath> paths;
         vector<double> dists;
@@ -65,8 +65,8 @@ class EdgeData {
         void add_path(vector<Index> path, double dist);
 };
 
-class Graph {
-
+class Graph
+{
     private:
         unordered_map<Index, unordered_set<Index, IndexHash>, IndexHash> nodes;
         unordered_map<Edge, EdgeData, EdgeHash> edges;

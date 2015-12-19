@@ -93,16 +93,12 @@ int main(int argc, char *argv[])
 
     DynamicVoronoi voronoi;
     voronoi.initializeMap(sizeX, sizeY, map);
-    voronoi.update();
-    if (doPruneAlternative)
-    {
-        voronoi.updateAlternativePrunedDiagram();
-    }
 
     Graph G;
+    Index start(525, 25), goal(525, 400);
     clock_t t1, t2;
     t1 = clock();
-    generate_graph(voronoi, G);
+    generate_graph(start, goal, voronoi, G);
     t2 = clock();
     float diff = (float) t2 - (float) t1;
     cout << "Time: " << diff / CLOCKS_PER_SEC << endl;
