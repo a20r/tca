@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <unordered_set>
+#include <queue>
 #include <iostream>
 #include <omp.h>
 #include "dynamicvoronoi.h"
@@ -11,6 +12,15 @@ using namespace std;
 
 #define NUM_NBRS 4
 #define NUM_THREADS 2
+
+inline bool is_node(DynamicVoronoi& dv, Index& ind)
+{
+    int i = ind.i, j = ind.j;
+    int nn = dv.getNumVoronoiNeighborsAlternative(i, j);
+    bool is_alt = dv.isVoronoiAlternative(i, j);
+    return is_alt && nn >= 3;
+
+}
 
 void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
         unordered_set<Index, IndexHash>& node_set)
@@ -104,12 +114,103 @@ Index next_in_path(Index cur, Index prev, DynamicVoronoi& dv)
     }
 }
 
+void find_enclosing_nodes(Index& ind, DynamicVoronoi& dv,
+        vector<Index>& nodes)
+{
+    unordered_set<Index, IndexHash> seen;
+    queue<Index> q;
+    q.push(ind);
+    Index w, e, n, s;
+    while (not q.empty())
+    {
+        Index e = q.front(), w = q.front();
+        e.i--;
+        q.pop();
+        while (seen.count(w) == 0 and !dv.isVoronoiAlternative(w.i, w.j))
+        {
+            n = Index(w.i, w.j + 1);
+            s = Index(w.i, w.j - 1);
+            if(seen.count(n) == 0 and !dv.isVoronoiAlternative(n.i, n.j))
+            {
+                q.push(n);
+            }
+            else
+            {
+                if (is_node(dv, n))
+                {
+                    nodes.push_back(n);
+                }
+            }
+            if(seen.count(s) == 0 and !dv.isVoronoiAlternative(s.i, s.j))
+            {
+                q.push(s);
+            }
+            else
+            {
+                if (is_node(dv, s))
+                {
+                    nodes.push_back(s);
+                }
+            }
+
+            seen.insert(w);
+            w.i++;
+        }
+        while (seen.count(e) == 0 and !dv.isVoronoiAlternative(e.i, e.j))
+        {
+            n = Index(e.i, e.j + 1);
+            s = Index(e.i, e.j - 1);
+            if(seen.count(n) == 0 and !dv.isVoronoiAlternative(n.i, n.j))
+            {
+                q.push(n);
+            }
+            else
+            {
+                if (is_node(dv, n))
+                {
+                    nodes.push_back(n);
+                }
+            }
+            if(seen.count(s) == 0 and !dv.isVoronoiAlternative(s.i, s.j))
+            {
+                q.push(s);
+            }
+            else
+            {
+                if (is_node(dv, s))
+                {
+                    nodes.push_back(s);
+                }
+            }
+            seen.insert(e);
+            e.i--;
+        }
+        if (is_node(dv, w))
+        {
+            nodes.push_back(w);
+        }
+        if (is_node(dv, e))
+        {
+            nodes.push_back(e);
+        }
+    }
+}
+
+void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
+        Graph& g)
+{
+
+}
+
 void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
 {
     dv.occupyCell(start.i, start.j);
     dv.occupyCell(goal.i, goal.j);
     dv.update();
     dv.updateAlternativePrunedDiagram();
+    vector<Index> ns;
+    find_enclosing_nodes(goal, dv, ns);
+    cout << ns.size() << endl;
     bool nbrs[NUM_NBRS];
     vector<Index> nodes;
     unordered_set<Index, IndexHash> node_set;
