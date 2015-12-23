@@ -101,6 +101,6 @@ int main(int argc, char *argv[])
     generate_graph(start, goal, voronoi, G);
     t2 = clock();
     float diff = (float) t2 - (float) t1;
-    // cout << "Time: " << diff / CLOCKS_PER_SEC << endl;
+    cout << "Time: " << diff / CLOCKS_PER_SEC << endl;
     G.write_to_file(pre + "/sandbox/graph.json");
 }

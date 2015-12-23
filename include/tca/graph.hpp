@@ -13,7 +13,7 @@ using namespace std;
 class Index
 {
     public:
-        unsigned int i, j;
+        int i, j;
 
         Index() {};
         ~Index() {};
@@ -81,6 +81,7 @@ class Graph
         void add_edge(Edge edge, EdgeData ed);
         EdgeData *get_edge(Edge edge);
         EdgeData *get_edge(Index a, Index b);
+        void remove_edge(Index a, Index b);
         string json();
         void write_to_file(string filename);
 };

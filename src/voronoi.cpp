@@ -4,6 +4,7 @@
 #include <queue>
 #include <iostream>
 #include <omp.h>
+#include <cmath>
 #include "dynamicvoronoi.h"
 #include "tca/graph.hpp"
 #include "tca/voronoi.hpp"
@@ -20,6 +21,20 @@ inline bool is_node(DynamicVoronoi& dv, Index& ind)
     bool is_alt = dv.isVoronoiAlternative(i, j);
     return is_alt && nn >= 3;
 
+}
+
+void crow_flies(Index a, Index b, vector<Index>& path)
+{
+    float mag = sqrtf(powf(a.i - b.i, 2) + powf(a.j - b.j, 2));
+    float di = (b.i - a.i) / mag;
+    float dj = (b.j - a.j) / mag;
+    float i = a.i, j = a.j;
+    while (abs(i - b.i) > 1 and abs(j - b.j) > 1)
+    {
+        i += di;
+        j += dj;
+        path.push_back(Index(i, j));
+    }
 }
 
 void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
@@ -174,15 +189,32 @@ void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
     find_enclosing_nodes(start, dv, start_nodes);
     vector<Index> goal_nodes;
     find_enclosing_nodes(goal, dv, goal_nodes);
+    for (int i = 0; i < start_nodes.size(); i++)
+    {
+        vector<Index> path;
+        crow_flies(start, start_nodes[i], path);
+        g.add_edge(start, start_nodes[i], path, path.size());
+        for (int j = 0; j < start_nodes.size(); j++)
+        {
+            g.remove_edge(start_nodes[i], start_nodes[j]);
+        }
+    }
+
+    for (int i = 0; i < goal_nodes.size(); i++)
+    {
+        vector<Index> path;
+        crow_flies(goal, goal_nodes[i], path);
+        g.add_edge(goal, goal_nodes[i], path, path.size());
+        for (int j = 0; j < goal_nodes.size(); j++)
+        {
+            g.remove_edge(goal_nodes[i], goal_nodes[j]);
+        }
+    }
 }
 
-void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
+void generate_connectivity_graph(Index& start, Index& goal, DynamicVoronoi& dv,
+        Graph& G)
 {
-    // sets up the DynamicVoronoi
-    dv.occupyCell(start.i, start.j);
-    dv.occupyCell(goal.i, goal.j);
-    dv.update();
-    dv.updateAlternativePrunedDiagram();
     bool nbrs[NUM_NBRS];
     vector<Index> nodes;
     unordered_set<Index, IndexHash> node_set;
@@ -215,4 +247,15 @@ void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
             }
         }
     }
+}
+
+void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
+{
+    // sets up the DynamicVoronoi
+    dv.occupyCell(start.i, start.j);
+    dv.occupyCell(goal.i, goal.j);
+    dv.update();
+    dv.updateAlternativePrunedDiagram();
+    generate_connectivity_graph(start, goal, dv, G);
+    connect_start_and_goal(start, goal, dv, G);
 }

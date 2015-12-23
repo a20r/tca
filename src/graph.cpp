@@ -90,6 +90,16 @@ EdgeData *Graph::get_edge(Index a, Index b)
     return this->get_edge(Edge(a, b));
 }
 
+void Graph::remove_edge(Index a, Index b)
+{
+    Edge edge(a, b);
+    edges.erase(edge);
+    if (nodes[a].count(b) > 0)
+    {
+        nodes[a].erase(b);
+    }
+}
+
 string json_index(Index ind)
 {
     stringstream buffer;
