@@ -29,7 +29,7 @@ void crow_flies(Index a, Index b, vector<Index>& path)
     float di = (b.i - a.i) / mag;
     float dj = (b.j - a.j) / mag;
     float i = a.i, j = a.j;
-    while (abs(i - b.i) > 1 and abs(j - b.j) > 1)
+    while(sqrtf(powf(i - b.i, 2) + powf(j - b.j, 2)) > 1)
     {
         i += di;
         j += dj;
@@ -148,7 +148,7 @@ void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
         {
             e.i++;
         }
-        for (Index idx = w; idx.i != e.i; idx.i++)
+        for (Index idx = w; idx.i <= e.i; idx.i++)
         {
             seen.insert(idx);
             Index n(idx.i, idx.j + 1);

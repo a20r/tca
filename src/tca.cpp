@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     voronoi.initializeMap(sizeX, sizeY, map);
 
     Graph G;
-    Index start(75, 30), goal(525, 400);
+    Index start(525, 30), goal(525, 400);
     clock_t t1, t2;
     t1 = clock();
     generate_graph(start, goal, voronoi, G);
