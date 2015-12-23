@@ -139,7 +139,6 @@ void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
     while (not q.empty())
     {
         Index e = q.front(), w = q.front();
-        e.i++;
         q.pop();
         while (seen.count(w) == 0 and !dv.isVoronoiAlternative(w.i, w.j))
         {
