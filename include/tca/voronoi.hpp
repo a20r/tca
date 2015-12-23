@@ -10,9 +10,11 @@ void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
         unordered_set<Index, IndexHash>& node_set);
 bool neighbourhood(Index ind, DynamicVoronoi& dv, bool nbrs[4]);
 Index index_lookup(Index a, int i);
-void find_enclosing_nodes(Index& ind, DynamicVoronoi& dv,
+void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
         vector<Index>& nodes);
-void connect_configurations(Index& start, Index& goal, DynamicVoronoi& dv,
+void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
+        vector<Index>& nodes, unordered_set<Index, IndexHash>& seen);
+void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
         Graph& g);
 void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& g);
 

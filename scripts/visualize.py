@@ -9,7 +9,7 @@ def get_path(path, img):
     ys = list()
     for px in path:
         xs.append(px["i"])
-        ys.append(img.shape[0] - px["j"])
+        ys.append(px["j"])
     return xs, ys
 
 
@@ -18,7 +18,7 @@ def get_nodes(g, img):
     ys = list()
     for node in g:
         xs.append(node["index"]["i"])
-        ys.append(img.shape[0] - node["index"]["j"])
+        ys.append(node["index"]["j"])
     return xs, ys
 
 
@@ -35,7 +35,7 @@ def run(graph_file, map_file):
                     plt.plot(xs, ys, "r-", linewidth=3, zorder=1)
         xs, ys = get_nodes(g, img)
         plt.scatter(xs, ys, zorder=2, s=100)
-        plt.imshow(img, cmap="gray", zorder=0)
+        # plt.imshow(img, cmap="gray", zorder=0)
         plt.show()
 
 

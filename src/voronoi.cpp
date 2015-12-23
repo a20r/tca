@@ -114,7 +114,7 @@ Index next_in_path(Index cur, Index prev, DynamicVoronoi& dv)
     }
 }
 
-void find_enclosing_nodes(Index& ind, DynamicVoronoi& dv,
+void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
         vector<Index>& nodes)
 {
     unordered_set<Index, IndexHash> seen;
@@ -124,66 +124,37 @@ void find_enclosing_nodes(Index& ind, DynamicVoronoi& dv,
     while (not q.empty())
     {
         Index e = q.front(), w = q.front();
-        e.i--;
+        e.i++;
         q.pop();
         while (seen.count(w) == 0 and !dv.isVoronoiAlternative(w.i, w.j))
         {
-            n = Index(w.i, w.j + 1);
-            s = Index(w.i, w.j - 1);
-            if(seen.count(n) == 0 and !dv.isVoronoiAlternative(n.i, n.j))
-            {
-                q.push(n);
-            }
-            else
-            {
-                if (is_node(dv, n))
-                {
-                    nodes.push_back(n);
-                }
-            }
-            if(seen.count(s) == 0 and !dv.isVoronoiAlternative(s.i, s.j))
-            {
-                q.push(s);
-            }
-            else
-            {
-                if (is_node(dv, s))
-                {
-                    nodes.push_back(s);
-                }
-            }
-
-            seen.insert(w);
-            w.i++;
+            w.i--;
         }
         while (seen.count(e) == 0 and !dv.isVoronoiAlternative(e.i, e.j))
         {
-            n = Index(e.i, e.j + 1);
-            s = Index(e.i, e.j - 1);
-            if(seen.count(n) == 0 and !dv.isVoronoiAlternative(n.i, n.j))
+            e.i++;
+        }
+        for (Index idx = w; idx.i != e.i; idx.i++)
+        {
+            seen.insert(idx);
+            Index n(idx.i, idx.j + 1);
+            Index s(idx.i, idx.j - 1);
+            if (seen.count(n) == 0 and !dv.isVoronoiAlternative(n.i, n.j))
             {
                 q.push(n);
             }
-            else
-            {
-                if (is_node(dv, n))
-                {
-                    nodes.push_back(n);
-                }
-            }
-            if(seen.count(s) == 0 and !dv.isVoronoiAlternative(s.i, s.j))
+            if (seen.count(s) == 0 and !dv.isVoronoiAlternative(s.i, s.j))
             {
                 q.push(s);
             }
-            else
+            if (is_node(dv, n))
             {
-                if (is_node(dv, s))
-                {
-                    nodes.push_back(s);
-                }
+                nodes.push_back(n);
             }
-            seen.insert(e);
-            e.i--;
+            if (is_node(dv, s))
+            {
+                nodes.push_back(s);
+            }
         }
         if (is_node(dv, w))
         {
@@ -199,18 +170,19 @@ void find_enclosing_nodes(Index& ind, DynamicVoronoi& dv,
 void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
         Graph& g)
 {
-
+    vector<Index> start_nodes;
+    find_enclosing_nodes(start, dv, start_nodes);
+    vector<Index> goal_nodes;
+    find_enclosing_nodes(goal, dv, goal_nodes);
 }
 
 void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
 {
+    // sets up the DynamicVoronoi
     dv.occupyCell(start.i, start.j);
     dv.occupyCell(goal.i, goal.j);
     dv.update();
     dv.updateAlternativePrunedDiagram();
-    vector<Index> ns;
-    find_enclosing_nodes(goal, dv, ns);
-    cout << ns.size() << endl;
     bool nbrs[NUM_NBRS];
     vector<Index> nodes;
     unordered_set<Index, IndexHash> node_set;
