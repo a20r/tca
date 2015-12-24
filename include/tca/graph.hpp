@@ -20,12 +20,11 @@ class Index
         Index(int i, int j);
 };
 
-typedef vector<Index> IndexPath;
+ostream& operator<<(ostream& os, const Index& idx);
 
-inline bool operator== (Index const& lhs, Index const& rhs)
-{
-    return (lhs.i == rhs.i) && (lhs.j == rhs.j);
-}
+bool operator== (Index const& lhs, Index const& rhs);
+
+typedef vector<Index> IndexPath;
 
 class IndexHash
 {
@@ -42,10 +41,7 @@ class Edge
         Edge(Index a, Index b);
 };
 
-inline bool operator== (Edge const& lhs, Edge const& rhs)
-{
-    return (lhs.a == rhs.a) && (lhs.b == rhs.b);
-}
+bool operator== (Edge const& lhs, Edge const& rhs);
 
 class EdgeHash
 {

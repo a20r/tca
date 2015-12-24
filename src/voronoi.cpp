@@ -14,6 +14,9 @@ using namespace std;
 #define NUM_NBRS 4
 #define NUM_THREADS 2
 
+/*
+ * Determines if an Index is a node
+ */
 inline bool is_node(DynamicVoronoi& dv, Index& ind)
 {
     int i = ind.i, j = ind.j;
@@ -23,6 +26,10 @@ inline bool is_node(DynamicVoronoi& dv, Index& ind)
 
 }
 
+/*
+ * Fills the vector<Index> path parameter with the straight line path
+ * from a to b
+ */
 void crow_flies(Index a, Index b, vector<Index>& path)
 {
     float mag = sqrtf(powf(a.i - b.i, 2) + powf(a.j - b.j, 2));
@@ -37,6 +44,10 @@ void crow_flies(Index a, Index b, vector<Index>& path)
     }
 }
 
+/*
+ * Iterates through all the indices of the map and fills the nodes vector
+ * and node_set set parameter with the nodes of the graph
+ */
 void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
         unordered_set<Index, IndexHash>& node_set)
 {
@@ -58,6 +69,10 @@ void determine_nodes(DynamicVoronoi& dv, vector<Index>& nodes,
     }
 }
 
+/*
+ * Determines which indices surrounding a given index are also part of the
+ * alternative Voronoi graph
+ */
 bool neighbourhood(Index ind, DynamicVoronoi& dv, bool nbrs[4])
 {
     int i = ind.i;
@@ -95,6 +110,10 @@ bool neighbourhood(Index ind, DynamicVoronoi& dv, bool nbrs[4])
     return false;
 }
 
+/*
+ * Given a center index and a number from 0 to 3, this returns the index of
+ * the neighbour
+ */
 inline Index index_lookup(Index a, int i)
 {
     switch (i)
@@ -112,6 +131,10 @@ inline Index index_lookup(Index a, int i)
     }
 }
 
+/*
+ * This works as an iterator to return the next index in a path given the
+ * current index, the previous index, and the dynamic Voronoi
+ */
 Index next_in_path(Index cur, Index prev, DynamicVoronoi& dv)
 {
     bool nbrs[NUM_NBRS];
@@ -129,6 +152,10 @@ Index next_in_path(Index cur, Index prev, DynamicVoronoi& dv)
     }
 }
 
+/*
+ * This uses an iterative flood fill algorithm to determine the nodes
+ * directly surrounding a point in the map
+ */
 void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
         vector<Index>& nodes)
 {
@@ -181,6 +208,9 @@ void find_enclosing_nodes(Index ind, DynamicVoronoi& dv,
     }
 }
 
+/*
+ * Connects the start and the goal indices to the graph
+ */
 void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
         Graph& g)
 {
@@ -211,6 +241,10 @@ void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
     }
 }
 
+/*
+ * Generates the initial topological graph representing the connectivity of
+ * the environment including the loops around the start and goal indices
+ */
 void generate_connectivity_graph(Index& start, Index& goal, DynamicVoronoi& dv,
         Graph& G)
 {
@@ -248,6 +282,10 @@ void generate_connectivity_graph(Index& start, Index& goal, DynamicVoronoi& dv,
     }
 }
 
+/*
+ * Generates the graph representing the connectivity of the environment
+ * and connects the start and goal indices to the graph
+ */
 void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
 {
     // sets up the DynamicVoronoi

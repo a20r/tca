@@ -9,15 +9,51 @@
 
 using namespace std;
 
-
+/*
+ * Constructs an Index. This class is used to denote an index of a map
+ * in integer coordinates and does not represent the physical positions
+ * with respect to a generic origin
+ */
 Index::Index(int i, int j) : i(i), j(j)
 {
 }
 
+/*
+ * Allows us to print an index
+ */
+ostream& operator<<(ostream& os, const Index& idx)
+{
+    os << "Index(i=" << idx.i << ", j=" << idx.j << ")";
+    return os;
+}
+
+/*
+ * Checks if two indices are equal in value
+ */
+bool operator== (Index const& lhs, Index const& rhs)
+{
+    return (lhs.i == rhs.i) && (lhs.j == rhs.j);
+}
+
+/*
+ * Constructs an edge which is just two indices. This is used for the data
+ * structures in the graph
+ */
 Edge::Edge(Index a, Index b) : a(a), b(b)
 {
 }
 
+/*
+ * Checks if two edges are equal in value
+ */
+bool operator== (Edge const& lhs, Edge const& rhs)
+{
+    return (lhs.a == rhs.a) && (lhs.b == rhs.b);
+}
+
+/*
+ * Hashes an index using a string hash.
+ */
 size_t IndexHash::operator() (const Index& index) const
 {
     stringstream buffer;
@@ -25,6 +61,9 @@ size_t IndexHash::operator() (const Index& index) const
     return hash<string>()(buffer.str());
 }
 
+/*
+ * Hashes an edge using a string hash.
+ */
 size_t EdgeHash::operator() (const Edge& edge) const {
     stringstream buffer;
     buffer << edge.a.i << " " << edge.a.j << " ";
@@ -32,17 +71,28 @@ size_t EdgeHash::operator() (const Edge& edge) const {
     return hash<string>()(buffer.str());
 }
 
+/*
+ * Constructs an EdgeData object. This is used as a extensible key
+ * association object that is used to be a value in a map.
+ */
 EdgeData::EdgeData(vector<IndexPath> paths, vector<double> dists) :
     paths(paths), dists(dists)
 {
 }
 
+/*
+ * Adds a path and its cost to the EdgeData object
+ */
 void EdgeData::add_path(vector<Index> path, double dist)
 {
     this->paths.push_back(path);
     this->dists.push_back(dist);
 }
 
+/*
+ * Adds an edge to the graph and adds a path and cost to the the associated
+ * EdgeData
+ */
 void Graph::add_edge(Index a, Index b, vector<Index> path, double dist)
 {
     if (edges.count(Edge(a, b)) == 0)
@@ -57,6 +107,9 @@ void Graph::add_edge(Index a, Index b, vector<Index> path, double dist)
     }
 }
 
+/*
+ * Adds an edge represented as two nodes with a given EdgeData to the graph
+ */
 void Graph::add_edge(Index a, Index b, EdgeData ed)
 {
     if (nodes.count(a) == 0)
@@ -68,11 +121,17 @@ void Graph::add_edge(Index a, Index b, EdgeData ed)
     edges[Edge(a, b)] = ed;
 }
 
+/*
+ * Adds an edge with a given EdgeData to the graph
+ */
 void Graph::add_edge(Edge edge, EdgeData ed)
 {
     this->add_edge(edge.a, edge.b, ed);
 }
 
+/*
+ * Gets an edge from the graph
+ */
 EdgeData *Graph::get_edge(Edge edge)
 {
     if (edges.count(edge) > 0)
@@ -85,11 +144,17 @@ EdgeData *Graph::get_edge(Edge edge)
     }
 }
 
+/*
+ * Gets an edge from the graph
+ */
 EdgeData *Graph::get_edge(Index a, Index b)
 {
     return this->get_edge(Edge(a, b));
 }
 
+/*
+ * Removes an edge from the graph
+ */
 void Graph::remove_edge(Index a, Index b)
 {
     Edge edge(a, b);
@@ -100,6 +165,9 @@ void Graph::remove_edge(Index a, Index b)
     }
 }
 
+/*
+ * Converts an Index to JSON
+ */
 string json_index(Index ind)
 {
     stringstream buffer;
@@ -108,6 +176,9 @@ string json_index(Index ind)
     return buffer.str();
 }
 
+/*
+ * Converts an index and EdgeData to JSON
+ */
 string json_index_paths(Index ind, EdgeData *ed)
 {
     stringstream buffer;
@@ -135,6 +206,9 @@ string json_index_paths(Index ind, EdgeData *ed)
     return buffer.str();
 }
 
+/*
+ * Converts a graph object to JSON
+ */
 string Graph::json() {
     stringstream buffer;
     buffer << "[";
@@ -162,6 +236,9 @@ string Graph::json() {
     return buffer.str();
 }
 
+/*
+ * Writes the graph to a file
+ */
 void Graph::write_to_file(string filename) {
     ofstream out_file;
     out_file.open(filename);
