@@ -1,4 +1,7 @@
 
+#include <queue>
+#include <cmath>
+#include "tca/weight.hpp"
 #include "tca/graph.hpp"
 
 /*
@@ -74,5 +77,60 @@ void Graph::remove_edge(Index a, Index b)
     if (nodes[a].count(b) > 0)
     {
         nodes[a].erase(b);
+    }
+}
+
+double dist_estimate(Index a, Index b)
+{
+    return sqrt(pow(a.i - b.i, 2) + pow(a.j - b.j, 2));
+}
+
+double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
+{
+    priority_queue<Weight<Index>> pq;
+    unordered_set<Index, IndexHash> closed, open;
+    unordered_map<Index, Index, IndexHash> came_from;
+    unordered_map<Index, double, IndexHash> gscore;
+    gscore[start] = 0;
+    pq.push(Weight<Index>(start, 0));
+    open.insert(start);
+    while (not pq.empty())
+    {
+        Weight<Index> wcur = pq.top();
+        Index cur = wcur.get_val();
+        open.erase(cur);
+        pq.pop();
+        if (cur == goal)
+        {
+            return 0;
+        }
+        closed.insert(cur);
+        for (auto nbr : nodes[cur])
+        {
+            if (closed.count(nbr) > 0)
+            {
+                continue;
+            }
+            float min_dist = 0;
+            for (int i = 0; i < get_edge(cur, nbr)->dists.size(); i++)
+            {
+                if (i == 0)
+                {
+                    min_dist = get_edge(cur, nbr)->dists[i];
+                }
+                else if (get_edge(cur, nbr)->dists[i] < min_dist)
+                {
+                    min_dist = get_edge(cur, nbr)->dists[i];
+                }
+            }
+            float tscore = gscore[cur] + min_dist;
+            if (open.count(nbr) == 0 || tscore >= gscore[nbr])
+            {
+                came_from[nbr] = cur;
+                gscore[nbr] = tscore;
+                pq.push(Weight<Index>(nbr, gscore[nbr] + dist_estimate(nbr, goal)));
+                open.insert(nbr);
+            }
+        }
     }
 }

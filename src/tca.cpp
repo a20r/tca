@@ -36,7 +36,9 @@ int main(int argc, char *argv[])
     Index start(525, 30), goal(525, 400);
     clock_t t1, t2;
     t1 = clock();
+    vector<Index> path;
     generate_graph(start, goal, voronoi, G);
+    G.shortest_path(start, goal, path);
     t2 = clock();
     float diff = (float) t2 - (float) t1;
     cout << "Time: " << diff / CLOCKS_PER_SEC << endl;
