@@ -245,8 +245,7 @@ void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
  * Generates the initial topological graph representing the connectivity of
  * the environment including the loops around the start and goal indices
  */
-void generate_connectivity_graph(Index& start, Index& goal, DynamicVoronoi& dv,
-        Graph& G)
+void generate_connectivity_graph(DynamicVoronoi& dv, Graph& G)
 {
     bool nbrs[NUM_NBRS];
     vector<Index> nodes;
@@ -293,6 +292,6 @@ void generate_graph(Index& start, Index& goal, DynamicVoronoi& dv, Graph& G)
     dv.occupyCell(goal.i, goal.j);
     dv.update();
     dv.updateAlternativePrunedDiagram();
-    generate_connectivity_graph(start, goal, dv, G);
+    generate_connectivity_graph(dv, G);
     connect_start_and_goal(start, goal, dv, G);
 }
