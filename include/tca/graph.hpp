@@ -9,6 +9,8 @@
 #include <fstream>
 #include <unordered_map>
 #include <unordered_set>
+#include <queue>
+#include "tca/weight.hpp"
 
 using namespace std;
 
@@ -56,6 +58,7 @@ class EdgeData
     public:
         vector<IndexPath> paths;
         vector<double> dists;
+        priority_queue<Weight<vector<Index> > > wpaths;
 
         EdgeData() {};
         ~EdgeData() {};

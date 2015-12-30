@@ -111,24 +111,15 @@ double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
             {
                 continue;
             }
-            float min_dist = 0;
-            for (int i = 0; i < get_edge(cur, nbr)->dists.size(); i++)
-            {
-                if (i == 0)
-                {
-                    min_dist = get_edge(cur, nbr)->dists[i];
-                }
-                else if (get_edge(cur, nbr)->dists[i] < min_dist)
-                {
-                    min_dist = get_edge(cur, nbr)->dists[i];
-                }
-            }
+            Weight<vector<Index> > path = get_edge(cur, nbr)->wpaths.top();
+            float min_dist = path.get_weight();
             float tscore = gscore[cur] + min_dist;
             if (open.count(nbr) == 0 || tscore >= gscore[nbr])
             {
                 came_from[nbr] = cur;
                 gscore[nbr] = tscore;
-                pq.push(Weight<Index>(nbr, gscore[nbr] + dist_estimate(nbr, goal)));
+                pq.push(Weight<Index>(nbr, gscore[nbr] +
+                            dist_estimate(nbr, goal)));
                 open.insert(nbr);
             }
         }

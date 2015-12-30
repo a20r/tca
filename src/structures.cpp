@@ -77,6 +77,7 @@ EdgeData::EdgeData(vector<IndexPath> paths, vector<double> dists) :
  */
 void EdgeData::add_path(vector<Index> path, double dist)
 {
+    this->wpaths.push(Weight<vector<Index> >(path, dist));
     this->paths.push_back(path);
     this->dists.push_back(dist);
 }
