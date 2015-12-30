@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <fstream>
+#include "dynamicvoronoi.h"
 
 using namespace std;
 
@@ -67,3 +68,17 @@ void loadPGM(std::istream &is, int *sizeX, int *sizeY, bool ***map)
     }
 }
 
+void load_dynamic_voronoi(string filename, DynamicVoronoi& dv)
+{
+    ifstream is(filename);
+    if (!is) {
+        std::cerr << "Could not open map file for reading.\n";
+        exit(-1);
+    }
+
+    bool **map = NULL;
+    int sizeX, sizeY;
+    loadPGM(is, &sizeX, &sizeY, &map);
+    is.close();
+    dv.initializeMap(sizeX, sizeY, map);
+}
