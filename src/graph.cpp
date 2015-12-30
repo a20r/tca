@@ -81,11 +81,17 @@ void Graph::remove_edge(Index a, Index b)
     }
 }
 
+/*
+ * Euclidean distance estimate used as a heuristic for A*
+ */
 double dist_estimate(Index a, Index b)
 {
     return sqrt(pow(a.i - b.i, 2) + pow(a.j - b.j, 2));
 }
 
+/*
+ * Shortest path between two nodes in the graph
+ */
 double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
 {
     priority_queue<Weight<Index>> pq;
