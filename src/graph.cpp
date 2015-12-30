@@ -123,7 +123,7 @@ double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
             Weight<vector<Index> > wpath = get_edge(cur, nbr)->wpaths.top();
             float min_dist = wpath.get_weight();
             float tscore = gscore[cur] + min_dist;
-            if (open.count(nbr) == 0 || tscore >= gscore[nbr])
+            if (open.count(nbr) == 0 || tscore <= gscore[nbr])
             {
                 came_from[nbr] = cur;
                 gscore[nbr] = tscore;

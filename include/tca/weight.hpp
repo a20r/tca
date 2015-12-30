@@ -22,7 +22,7 @@ class Weight {
         }
 
         bool operator<(const Weight& right) const {
-            return this->weight < right.get_weight();
+            return this->weight > right.get_weight();
         }
 
     private:
