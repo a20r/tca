@@ -25,6 +25,7 @@ class Index
 };
 
 ostream& operator<<(ostream& os, const Index& idx);
+ostream& operator<<(ostream& os, const vector<Index>& idcs);
 
 bool operator== (Index const& lhs, Index const& rhs);
 

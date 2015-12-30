@@ -1,6 +1,7 @@
 
 #include <queue>
 #include <cmath>
+#include <algorithm>
 #include "tca/weight.hpp"
 #include "tca/graph.hpp"
 
@@ -102,7 +103,15 @@ double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
         pq.pop();
         if (cur == goal)
         {
-            return 0;
+            Index idx = goal;
+            while (came_from.count(idx) > 0)
+            {
+                path.push_back(idx);
+                idx = came_from[idx];
+            }
+            path.push_back(start);
+            reverse(path.begin(), path.end());
+            return path.size();
         }
         closed.insert(cur);
         for (auto nbr : nodes[cur])
@@ -111,8 +120,8 @@ double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
             {
                 continue;
             }
-            Weight<vector<Index> > path = get_edge(cur, nbr)->wpaths.top();
-            float min_dist = path.get_weight();
+            Weight<vector<Index> > wpath = get_edge(cur, nbr)->wpaths.top();
+            float min_dist = wpath.get_weight();
             float tscore = gscore[cur] + min_dist;
             if (open.count(nbr) == 0 || tscore >= gscore[nbr])
             {

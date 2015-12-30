@@ -232,8 +232,8 @@ void connect_start_and_goal(Index& start, Index& goal, DynamicVoronoi& dv,
     for (int i = 0; i < goal_nodes.size(); i++)
     {
         vector<Index> path;
-        crow_flies(goal, goal_nodes[i], path);
-        g.add_edge(goal, goal_nodes[i], path, path.size());
+        crow_flies(goal_nodes[i], goal, path);
+        g.add_edge(goal_nodes[i], goal, path, path.size());
         for (int j = 0; j < goal_nodes.size(); j++)
         {
             g.remove_edge(goal_nodes[i], goal_nodes[j]);

@@ -38,10 +38,12 @@ int main(int argc, char *argv[])
     t1 = clock();
     vector<Index> path;
     generate_graph(start, goal, voronoi, G);
-    G.shortest_path(start, goal, path);
+    double cost = G.shortest_path(start, goal, path);
     t2 = clock();
     float diff = (float) t2 - (float) t1;
     cout << "Time: " << diff / CLOCKS_PER_SEC << endl;
     cout << "Start: " << start << " | Goal: " << goal << endl;
+    cout << "Path: " << path << endl;
+    cout << "Path Cost: " << cost << endl;
     G.write_to_file(pre + "/sandbox/graph.json");
 }

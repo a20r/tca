@@ -20,6 +20,24 @@ ostream& operator<<(ostream& os, const Index& idx)
 }
 
 /*
+ * Allows us to print a vector of indices
+ */
+ostream& operator<<(ostream& os, const vector<Index>& idcs)
+{
+    os << "[";
+    for (int i = 0; i < idcs.size(); i++)
+    {
+        os << idcs[i];
+        if (i < idcs.size() - 1)
+        {
+            os << ", ";
+        }
+    }
+    os << "]";
+    return os;
+}
+
+/*
  * Checks if two indices are equal in value
  */
 bool operator== (Index const& lhs, Index const& rhs)
