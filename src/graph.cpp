@@ -109,6 +109,7 @@ double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
         pq.pop();
         if (cur == goal)
         {
+            // bro beans, this bit is not entirely correct
             Index idx = goal;
             while (came_from.count(idx) > 0)
             {
