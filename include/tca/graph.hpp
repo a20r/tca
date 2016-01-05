@@ -87,6 +87,7 @@ class Graph
         string json();
         void write_to_file(string filename);
         double shortest_path(Index start, Index goal, vector<Index>& path);
+        void backtrack_path(Index start, Index goal, vector<Index>& path);
 };
 
 #endif

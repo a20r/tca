@@ -141,3 +141,12 @@ double Graph::shortest_path(Index start, Index goal, vector<Index>& path)
         }
     }
 }
+
+/*
+ * Constructs the path to the goal using a dictionary of where each node
+ * came from.
+ */
+void Graph::backtrack_path(Index start, Index goal, vector<Index>& path)
+{
+
+}
