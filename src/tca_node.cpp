@@ -34,14 +34,14 @@ Index pose_to_index(geometry_msgs::Pose pose, nav_msgs::MapMetaData info)
     double uj = pose.position.y - info.origin.position.y;
     int i = (int) (ui / info.resolution);
     int j = (int) (uj / info.resolution);
-    return Index(i, j);
+    return Index(j, i);
 }
 
 geometry_msgs::Pose index_to_pose(Index ind, nav_msgs::MapMetaData info)
 {
     geometry_msgs::Pose pose;
-    pose.position.x = ind.i * info.resolution + info.origin.position.x;
-    pose.position.y = ind.j * info.resolution + info.origin.position.y;
+    pose.position.x = ind.j * info.resolution + info.origin.position.x;
+    pose.position.y = ind.i * info.resolution + info.origin.position.y;
     return pose;
 }
 
