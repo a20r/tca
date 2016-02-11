@@ -41,4 +41,4 @@ def run(graph_file, map_file):
 
 if __name__ == "__main__":
     run("sandbox/graph.json",
-        "resources/dynamicvoronoi/strongly_connected.pgm")
+        "third_party/dynamicvoronoi/strongly_connected.pgm")

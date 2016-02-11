@@ -9,4 +9,8 @@
             goal_topic: /move_base_simple/goal
         </rosparam>
     </node>
+    <node pkg="rostopic" type="rostopic" name="odom_pub"
+        args="pub -r 10 odom nav_msgs/Odometry
+        '{header: {frame_id: camera_link},
+        pose: {pose: {position: {x: 0.2, y: 0.2}}}}'"/>
 </launch>

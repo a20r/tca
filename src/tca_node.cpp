@@ -16,7 +16,7 @@
 
 using namespace std;
 
-string tca_path_topic = "shortest_path"
+string tca_path_topic = "shortest_path";
 
 int num_paths;
 string fixed_frame, occupancy_topic, odom_topic, goal_topic;
@@ -26,45 +26,52 @@ bool odom_set = false, goal_set = false, map_init = false;
 nav_msgs::Odometry current_position;
 geometry_msgs::PoseStamped goal;
 DynamicVoronoi dv;
-bool **map;
+bool **mp;
 
 Index pose_to_index(geometry_msgs::Pose pose, nav_msgs::MapMetaData info)
 {
     double ui = pose.position.x - info.origin.position.x;
     double uj = pose.position.y - info.origin.position.y;
-    int i = (int) (ui / info.origin.resolution);
-    int j = (int) (uj / info.origin.resolution);
+    int i = (int) (ui / info.resolution);
+    int j = (int) (uj / info.resolution);
     return Index(i, j);
 }
 
 geometry_msgs::Pose index_to_pose(Index ind, nav_msgs::MapMetaData info)
 {
     geometry_msgs::Pose pose;
-    pose.position.x = ind.i * info.origin.resolution + info.origin.position.x;
-    pose.position.y = ind.j * info.origin.resolution + info.origin.position.y;
+    pose.position.x = ind.i * info.resolution + info.origin.position.x;
+    pose.position.y = ind.j * info.resolution + info.origin.position.y;
     return pose;
 }
 
 void og_to_map(nav_msgs::OccupancyGrid og)
 {
-    int width = og.info.width;
-    int height = og.info.height;
+    const int width = og.info.width;
+    const int height = og.info.height;
 
     if (!map_init)
     {
-        map = malloc(sizeof(bool *) * width);
-        for (int i = 0; i < width; i++)
+        mp = new bool*[height];
+        for (int i = 0; i < height; i++)
         {
-            map[i] = malloc(sizeof(bool) * height);
+            mp[i] = new bool[width];
         }
         map_init = true;
     }
 
-    for (int i = 0; i < height; i++)
+    for (int i = 0; i < width; i++)
     {
-        for (int j = 0; j < width; j++)
+        for (int j = 0; j < height; j++)
         {
-            map[i][j] = og.data[j * width + i];
+            if (i == width - 1 or j == height - 1 or i == 0 or j == 0)
+            {
+                mp[j][i] = true;
+            }
+            else
+            {
+                mp[j][i] = og.data[j * width + i] > 0;
+            }
         }
     }
 }
@@ -77,16 +84,16 @@ void occupancy_grid_callback(nav_msgs::OccupancyGrid og)
         vector<Index> ind_path;
         nav_msgs::Path path;
         og_to_map(og);
-        dv.initializeMap(og.info.width, og.info.height, map);
-        Index start = pose_to_index(current_position.pose);
-        Index end = pose_to_index(goal.pose.pose);
+        dv.initializeMap(og.info.width, og.info.height, mp);
+        Index start = pose_to_index(current_position.pose.pose, og.info);
+        Index end = pose_to_index(goal.pose, og.info);
         generate_graph(start, end, dv, G);
-        G.shortest_path(star, end, ind_path);
+        G.shortest_path(start, end, ind_path);
         for (int i = 0; i < ind_path.size(); i++)
         {
-            nav_msgs::PoseStamped ps;
+            geometry_msgs::PoseStamped ps;
             ps.header.frame_id = fixed_frame;
-            ps.pose = index_to_pose(ind_path[i]);
+            ps.pose = index_to_pose(ind_path[i], og.info);
             path.poses.push_back(ps);
         }
         path.header.frame_id = fixed_frame;
