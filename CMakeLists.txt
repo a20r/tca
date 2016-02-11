@@ -19,10 +19,10 @@ catkin_package(
  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs nav_msgs
 )
 
-add_subdirectory(resources/dynamicvoronoi dynamicvoronoi)
+add_subdirectory(third_party/dynamicvoronoi dynamicvoronoi)
 
 include_directories(
-    include ${catkin_INCLUDE_DIRS} resources/dynamicvoronoi/src
+    include ${catkin_INCLUDE_DIRS} third_party/dynamicvoronoi/src
 )
 
 add_executable(tca_node src/tca.cpp src/voronoi.cpp src/graph.cpp src/json.cpp
