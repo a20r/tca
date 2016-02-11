@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="tca" type="tca_node" name="tca_node" output="screen">
+        <rosparam>
+            num_paths: 1
+            fixed_frame: camera_link
+            occupancy_topic: /fogg_grid
+            odom_topic: /odom
+            goal_topic: /move_base_simple/goal
+        </rosparam>
+    </node>
+</launch>
